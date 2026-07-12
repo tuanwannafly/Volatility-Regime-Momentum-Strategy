@@ -1,0 +1,104 @@
+# Default strategy config — change here, not in code.
+universe:
+  # Subset of VN30 chosen for liquidity + sector diversification.
+  # Avoid penny / illiquid names that would inflate cost assumptions.
+  tickers:
+    - FPT
+    - VCB
+    - VHM
+    - VIC
+    - VNM
+    - HPG
+    - MWG
+    - MSN
+    - TCB
+    - VPB
+
+data:
+  start: "2019-01-01"
+  end: "2025-12-31"
+  source: "VCI"
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+
+features:
+  rsi_len: 14
+  macd_fast: 12
+  macd_slow: 26
+  macd_signal: 9
+  bb_len: 20
+  bb_std: 2.0
+  atr_len: 14
+  vol_windows: [5, 20, 60]
+  vol_zscore_window: 60
+  return_lags: [1, 2, 5]
+  # CRITICAL: shift features by 1 day to avoid lookahead bias.
+  # Feature at time t only uses info up to close at t-1.
+  shift_features: true
+
+labeling:
+  method: "triple_barrier"
+  upper_atr_mult: 2.0   # upper barrier = entry + mult * ATR
+  lower_atr_mult: 2.0   # lower barrier = entry - mult * ATR
+  time_barrier_days: 10 # max holding period
+  min_return: 0.0       # de-noise tiny moves: barrier < min_return is "flat"
+
+regime:
+  method: "rolling_vol_percentile"  # or "gmm_2cluster"
+  lookback: 60
+  high_vol_percentile: 0.67         # top tercile = high-vol regime
+
+split:
+  method: "walk_forward"
+  n_splits: 5
+  train_years: 2.5
+  test_months: 6
+  embargo_days: 5                   # gap between train and test to avoid leak
+  min_train_size: 500
+
+models:
+  baseline_lr:
+    enabled: true
+    C: 1.0
+    max_iter: 1000
+    class_weight: "balanced"
+
+  xgboost:
+    enabled: true
+    n_trials: 30                    # Optuna trials
+    timeout_s: 600
+    cv_folds: 3
+    early_stopping_rounds: 50
+
+  lstm:
+    enabled: true
+    seq_len: 30
+    hidden_size: 32
+    num_layers: 2
+    dropout: 0.2
+    lr: 1.0e-3
+    epochs: 30
+    batch_size: 64
+    patience: 5
+    device: "cpu"
+
+backtest:
+  initial_capital: 1_000_000_000     # VND 1B (round)
+  cost_bps_per_side: 15             # 0.15% per side (buy + sell) — typical VN broker
+  sell_tax_bps: 10                  # 0.10% sell-side tax on VN equities
+  slippage_bps: 5                   # 0.05% adverse move when filling
+  target_annual_vol: 0.30           # 30% annualized vol target (more aggressive)
+  vol_estimator: "ewma"             # realized vol estimator
+  ewma_halflife: 20
+  max_position_size: 2.0            # cap exposure per name (allow leverage for diversification)
+  max_drawdown_threshold: 0.15      # 15% drawdown -> cut exposure to 0 for cooldown
+  drawdown_cooldown_days: 10
+
+evaluation:
+  risk_free_rate: 0.04              # VND risk-free ~ 4-5%
+  rolling_sharpe_window: 126        # 6 months
+  tearsheet_output: "reports/tearsheets"
+
+mlflow:
+  tracking_uri: "mlruns"
+  experiment_name: "vol_regime_momentum"

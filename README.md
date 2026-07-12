@@ -180,17 +180,4 @@ make the strategy more aggressive, raise `target_annual_vol` and
 - **MLflow tracking** (optional). Run without `--no-mlflow` to log params +
   per-fold metrics under `mlruns/`.
 
-## Method One-Liners (interview prep)
-
-| Question                                | One-line answer                                                                                              |
-|-----------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| Why triple-barrier?                     | Fixed-horizon return labels have overlapping horizons and tons of label noise; triple barrier cleanly separates "up vs down vs flat" with a known holding period. |
-| Why ATR-scaled barriers?                | A 2% barrier is huge in a calm regime and trivial in a volatile one. ATR scales the threshold to local vol so the label difficulty is roughly constant across regimes. |
-| Cost?                                   | 15 bps brokerage / side, 10 bps sell tax, 5 bps slippage. ~30 bps round trip on a typical turnover day.     |
-| Why DL didn't win?                      | Daily data is small (~1 800 rows × 10 names). Deep models shine with much more data. The GRU was comparable to XGBoost on logloss but lost on accuracy — classic over-fit / small-data regime. |
-| Why vol-target?                         | A 10% vol target shrinks positions in 2022 and 2024-25 (high-vol periods) and lets them breathe in 2021 (low-vol). This is the single biggest reason the strategy drawdown (-19%) is a third of buy-hold's (-55%). |
-| Is 0.86 Sharpe significant?              | **No** at conventional levels: Lo t = 1.22 (p = 0.22), block-bootstrap 95% CI = [-0.37, +1.59] contains 0, Deflated Sharpe p = 0.43. The point estimate is suggestive, not conclusive. Need n ≈ 1000 days at the same SR for p < 0.05. |
-| What's the failure mode?                 | The drawdown breaker locks exposure after a 15% DD and only resets after 10 trading days. In 2023-24 it stayed on for two consecutive years — those two years contributed 0% to the headline number. Production code needs a vol-relative breaker threshold. |
-| What would break this in production?    | (a) Regime change (e.g. policy shift that breaks the vol-return link). (b) Liquidity drought in the universe. (c) Cost regime change (e.g. tax change). (d) Statistically, the result may simply not replicate on a longer window — we honestly don't know yet. |
-
 See **[RESEARCH_NOTE.md](RESEARCH_NOTE.md)** for the long-form version.
