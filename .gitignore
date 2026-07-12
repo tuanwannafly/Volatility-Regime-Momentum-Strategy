@@ -1,0 +1,52 @@
+# Data
+data/raw/*.parquet
+data/raw/*.csv
+data/raw/*.json
+data/processed/*.parquet
+data/processed/*.csv
+data/predictions/*.json
+
+# MLflow
+mlruns/
+
+# Reports / plots
+reports/figures/*.png
+reports/figures/*.html
+reports/tearsheets/*.html
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+.eggs/
+.pyc
+.pyo
+
+# Virtual envs
+venv/
+.venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS
+Thumbs.db
+
+#Ignore vscode AI rules
+.github\instructions\codacy.instructions.md

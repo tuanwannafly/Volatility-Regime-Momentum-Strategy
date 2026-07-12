@@ -1,0 +1,42 @@
+{
+  "naive_tstat": {
+    "sr": 0.8575282233764848,
+    "t_stat": 1.3428960296455312,
+    "p_value_two_sided": 0.17930564224766865,
+    "n_days": 618
+  },
+  "lo_tstat": {
+    "sr": 0.8575282233764848,
+    "t_stat": 1.2164903186587461,
+    "p_value_two_sided": 0.22379819681125124,
+    "autocorr_lag1": 0.05506936793204906,
+    "pos_autocorr_sum": 1.1310839546552176,
+    "skew": -2.9956290739112483,
+    "excess_kurtosis": 76.15134079951821,
+    "n_days": 618
+  },
+  "block_bootstrap": {
+    "sr_point": 0.8575282233764848,
+    "sr_ci_95_low": -0.36912935883555603,
+    "sr_ci_95_high": 1.5925448833409208,
+    "block_size_days": 21,
+    "n_bootstrap": 2000,
+    "ci_contains_zero": true,
+    "frac_bootstrap_negative": 0.059
+  },
+  "deflated_sharpe": {
+    "min_trials_4": {
+      "dsr_p_value": 0.4347209253970925,
+      "expected_max_sr_under_null": 0.7416623066771986,
+      "n_trials": 4,
+      "se_sr": 0.044405779214145125
+    },
+    "max_trials_60": {
+      "dsr_p_value": 0.8705188895570729,
+      "expected_max_sr_under_null": 1.653275197075565,
+      "n_trials": 60,
+      "se_sr": 0.044405779214145125
+    },
+    "interpretation": "DSR p-value < 0.05 means the SR is unlikely to be the best of `n_trials` zero-SR strategies. We report both conservative (4) and aggressive (60) trial counts because the line between model tiers and Optuna hyperparam trials is fuzzy."
+  }
+}
