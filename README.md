@@ -160,24 +160,25 @@ make the strategy more aggressive, raise `target_annual_vol` and
 `max_position_size`. To make it more conservative, lower them and tighten
 `max_drawdown_threshold`.
 
-## Engineering Hygiene (the things reviewers actually check)
-
-- **No lookahead.** Every rolling feature is computed on past data and then
-  `shift(1)`'d so that row at time *t* only sees info up to close of *t-1*.
-  See `features._shift_features`.
-- **No random splits.** `splits.walk_forward_splits` returns strictly
-  chronological folds with an embargo gap. (Pitfall called out explicitly in
-  the plan.)
-- **No leak in feature_columns.** `features.feature_columns` excludes
-  `label`, `label_ret`, `label_hdays` so the model never sees the answer.
-- **Hyperparameters tuned inside the first training fold only**, then
-  reused. Optuna does not see any test data.
-- **Backtest pays real costs.** Brokerage (15 bps), sell tax (10 bps), and
-  slippage (5 bps) are applied on every position change. Cost is scaled by
-  current equity (not absolute), so the curve compounds correctly.
-- **Drawdown circuit breaker.** When portfolio DD > 15%, exposure is cut to
-  0 for 10 trading days.
-- **MLflow tracking** (optional). Run without `--no-mlflow` to log params +
-  per-fold metrics under `mlruns/`.
-
 See **[RESEARCH_NOTE.md](RESEARCH_NOTE.md)** for the long-form version.
+
+---
+
+## Interactive Demo (Streamlit / HF Spaces)
+
+An interactive tearsheet lives under [`app/`](app/) and is published-ready
+for Hugging Face Spaces. It is **read-only**: it just renders the artifacts
+above as charts and metric tiles with a few filters.
+
+```bash
+pip install -r space/requirements.txt
+streamlit run app/app.py
+```
+
+![Dashboard screenshot](reports/figures/dashboard_screenshot.png)
+
+Sections: equity curve & drawdown, rolling diagnostics (Sharpe / vol windows
+slider), exposure / turnover, sub-period breakdown (year / fold / regime),
+statistical significance of the Sharpe, and per-ticker buy-and-hold
+comparison with an interactive ticker filter and overlay chart.
+Full walkthrough: **[app/README_DASHBOARD.md](app/README_DASHBOARD.md)**.

@@ -1,18 +1,18 @@
-# Data
-data/raw/*.parquet
-data/raw/*.csv
-data/raw/*.json
-data/processed/*.parquet
-data/processed/*.csv
-data/predictions/*.json
+# # Data
+# data/raw/*.parquet
+# data/raw/*.csv
+# data/raw/*.json
+# data/processed/*.parquet
+# data/processed/*.csv
+# data/predictions/*.json
 
-# MLflow
-mlruns/
+# # MLflow
+# mlruns/
 
-# Reports / plots
-reports/figures/*.png
-reports/figures/*.html
-reports/tearsheets/*.html
+# # Reports / plots
+# reports/figures/*.png
+# reports/figures/*.html
+# reports/tearsheets/*.html
 
 # Python
 __pycache__/
