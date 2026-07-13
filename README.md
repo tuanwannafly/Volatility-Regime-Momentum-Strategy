@@ -174,7 +174,7 @@ above as charts and metric tiles with a few filters.
 pip install -r space/requirements.txt
 streamlit run app/app.py
 ```
-** Deploy link: **[Volatility Regime Momentum Strategy]( https://volatility-regime-momentum-strategy-cd8mcm4pn5bwfzck4ijx7n.streamlit.app/
+Deploy link: https://volatility-regime-momentum-strategy-cd8mcm4pn5bwfzck4ijx7n.streamlit.app/
 
 Sections: equity curve & drawdown, rolling diagnostics (Sharpe / vol windows
 slider), exposure / turnover, sub-period breakdown (year / fold / regime),
