@@ -1,0 +1,16 @@
+# Streamlit SDK runtime requirements for the dashboard.
+#
+# Pinned to versions known to be present on the Hugging Face Space image and
+# small enough to fit comfortably in a 1 GB Space.  Heavy ML training deps
+# (vnstock, torch, xgboost, mlflow, optuna, quantstats) are intentionally NOT
+# included here: the dashboard is read-only and consumes artifacts in
+# `reports/`. Anything in `requirements.txt` that the dashboard actually needs
+# is also pulled in below.
+
+streamlit>=1.36,<2.0
+pandas>=2.0,<3.0
+numpy>=1.24,<3.0
+# Altair ships with Streamlit on PyPI but we pin it explicitly so the HF
+# Space image (which builds from this file alone) definitely gets a matching
+# version. The drawdown-calendar heatmap in app.py depends on it.
+altair>=5.0,<6.0
